@@ -1,37 +1,40 @@
-from datetime import datetime
-
-def build_marc_record(data, isbn):
-    marc_fields = []
+def build_rda_marc_record(data):
+    marc = []
+    # 020 - ISBN
+    marc.append(f"020 ## $a {data['isbn']}")
     
-    # 001 - الرقم الموحد (ISBN)
-    clean_isbn = str(isbn).replace('-', '')
-    marc_fields.append(f"001 ## $a {clean_isbn}")
+    # 040 - مصدر الفهرسة (نظامك)
+    marc.append(f"040 ## $a AR-智能 $b ara $e rda")
     
-    # 100 - المؤلف الرئيسي
-    author = data.get('authors', [''])[0] if data.get('authors') else "مؤلف غير معروف"
-    marc_fields.append(f"100 1# $a {author}")
+    # 050 - تصنيف مكتبة الكونجرس
+    marc.append(f"050 00 $a {data['lcc_suggested']}")
     
-    # 245 - العنوان وذكر المسؤولية
-    title = data.get('title', '')
-    marc_fields.append(f"245 10 $a {title} $c {', '.join(data.get('authors', []))}")
+    # 100 - المدخل الرئيسي للمؤلف
+    marc.append(f"100 1# $a {data['author_primary']}, $e author.")
     
-    # 260 - بيانات النشر (محسن للعربية)
-    location = data.get('pub_location', 'د.م')
-    publisher = data.get('publisher', 'د.ن')
-    year = data.get('pub_year', 'د.ت')
-    marc_fields.append(f"260 ## $a {location} $b {publisher} $c {year}")
+    # 245 - العنوان (RDA لا يختصر العنوان)
+    marc.append(f"245 10 $a {data['title_statement']}")
     
-    # 520 - المستخلص (من الصور)
-    if data.get('description'):
-        marc_fields.append(f"520 ## $a {data['description']}")
+    # 264 - بيانات النشر (RDA Standard)
+    pub = data['publication']
+    marc.append(f"264 #1 $a {pub['place']} : $b {pub['publisher']}, $c {pub['year']}.")
+    
+    # 300 - الوصف المادي
+    illus = "illustrations" if data['physical_desc']['illus'] else ""
+    marc.append(f"300 ## $a {data['physical_desc']['pages']} pages : $b {illus} ; $c 24 cm.")
+    
+    # 336, 337, 338 - حقول RDA الخاصة بنوع المحتوى والوسائط
+    marc.append("336 ## $a text $b txt $2 rdacontent")
+    marc.append("337 ## $a unmediated $b n $2 rdamedia")
+    marc.append("338 ## $a volume $b nc $2 rdacarrier")
+    
+    # 650 - رؤوس الموضوعات (LCSH)
+    for subject in data['subjects']:
+        marc.append(f"650 #4 $a {subject}.")
         
-    return marc_fields
+    return marc
 
-def generate_marc_iso2709(marc_fields, isbn):
-    # كود التحويل إلى ISO2709 (نفس منطقك السابق مع التأكد من UTF-8)
+def generate_marc_iso2709(marc_fields):
+    # تحويل الحقول إلى تنسيق ثنائي UTF-8 (ISO 2709)
     human_readable = "\n".join(marc_fields)
-    # (هنا يتم وضع منطق توليد Leader و Directory المبسط)
-    return {
-        'iso2709': human_readable.encode('utf-8'), 
-        'human_readable': human_readable
-    }
+    return human_readable.encode('utf-8')
