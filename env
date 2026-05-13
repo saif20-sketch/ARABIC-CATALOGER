@@ -1,0 +1,10 @@
+# Hugging Face Token – ضع الرمز الخاص بك هنا (للتشغيل المحلي فقط)
+HF_TOKEN=your_huggingface_token_here
+
+# تفعيل الذكاء الاصطناعي (true/false)
+USE_AI=true
+
+# مفاتيح اختيارية لمصادر إضافية
+LIBRARYTHING_KEY=your_librarything_key_here
+ISBNDB_KEY=your_isbndb_key_here
+WORLDCAT_KEY=your_worldcat_key_here
