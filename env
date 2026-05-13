@@ -1,10 +1,7 @@
-# Hugging Face Token – ضع الرمز الخاص بك هنا (للتشغيل المحلي فقط)
+# Google AI Studio Key (Gemini)
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# Hugging Face Token (للميزات الإضافية)
 HF_TOKEN=your_huggingface_token_here
 
-# تفعيل الذكاء الاصطناعي (true/false)
 USE_AI=true
-
-# مفاتيح اختيارية لمصادر إضافية
-LIBRARYTHING_KEY=your_librarything_key_here
-ISBNDB_KEY=your_isbndb_key_here
-WORLDCAT_KEY=your_worldcat_key_here
