@@ -14,4 +14,4 @@ def normalize_authors(authors: List[str]) -> List# مبدئيًا: تنظيف ب
         if a not in seen:
             out.append(a)
             seen.add(a)
-    return out
+    return out 
